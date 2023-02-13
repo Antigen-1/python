@@ -1,5 +1,5 @@
 #lang racket/base
-(require data-abstraction)
+(require data-abstraction (for-syntax racket/base))
 
 (define-data
   python-vm

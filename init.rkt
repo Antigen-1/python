@@ -1,5 +1,5 @@
 #lang racket/base
-(require data-abstraction)
+(require data-abstraction "lib.rkt")
 
 (define python-lib (get-python-lib))
 (provide python-lib)
@@ -7,7 +7,7 @@
 (define-data
   python-vm
   ;;https://racket.discourse.group/t/macro-in-racket-language/1709/7?u=antigen-11
-  (lib racket/base ffi/unsafe racket/function "lib.rkt")
+  (lib racket/base ffi/unsafe racket/function)
   (representation
    (initialize (get-ffi-obj "Py_Initialize" python-lib (_fun -> _void) (thunk (error "initialize:cannot be extracted"))))
    (finalize (get-ffi-obj "Py_FinalizeEx" python-lib (_fun -> (r : _int) -> (if (zero? r) (void) (error "finalize:fail to free all memory allocated by python"))) (thunk (error "finalize:cannot be extracted"))))

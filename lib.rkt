@@ -1,6 +1,7 @@
 #lang racket/base
-(require ffi/unsafe ffi/unsafe/define)
-(provide python-lib define-python)
+(require ffi/unsafe)
+(provide get-python-lib current-python-path)
 
-(define python-lib (ffi-lib "libpython" '("3" #f)))
-(define-ffi-definer define-python python-lib)
+(define current-python-path (make-parameter "libpython3.10"))
+
+(define get-python-lib (lambda () (ffi-lib (current-python-path))))

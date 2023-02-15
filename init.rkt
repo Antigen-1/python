@@ -1,10 +1,10 @@
 #lang racket/base
-(require data-abstraction "lib.rkt")
+(require data-abstraction)
 
 (define-data
   python-vm
   ;;https://racket.discourse.group/t/macro-in-racket-language/1709/7?u=antigen-11
-  (lib racket/base ffi/unsafe racket/function)
+  (lib racket/base ffi/unsafe racket/function "lib.rkt")
   (representation
    (python-lib (get-python-lib))
    (initialize (get-ffi-obj "Py_Initialize" python-lib (_fun -> _void) (thunk (error "initialize:cannot be extracted"))))

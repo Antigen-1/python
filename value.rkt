@@ -1,8 +1,6 @@
 #lang racket/base
 (require data-abstraction)
 
-(define pylib (ref-in-space python-vm:representation python-lib))
-
 (define-data
   python-value
   (lib
@@ -16,23 +14,23 @@
    (PyObj* (_cpointer/null 'PyObject))
    
    (build-value
-    (let ((func (ffi-obj-ref 'Py_BuildValue pylib (thunk (error "build-value:cannot be extracted")))))
+    (let ((func (ffi-obj-ref 'Py_BuildValue (ref-in-space python-vm:representation python-lib) (thunk (error "build-value:cannot be extracted")))))
       (lambda (other-input-types fmt . data) (apply (ffi-call func (cons _string other-input-types) PyObj*) fmt data))))
    
    (is? (get-ffi-obj 'Py_Is
-                     pylib
+                     (ref-in-space python-vm:representation python-lib)
                      (_fun PyObj* PyObj* -> _bool)
                      (thunk (error "is?:cannot be extracted"))))
    (none? (get-ffi-obj 'Py_IsNone
-                       pylib
+                       (ref-in-space python-vm:representation python-lib)
                        (_fun PyObj* -> _bool)
                        (thunk (error "none?:cannot be extracted"))))
    (true? (get-ffi-obj 'Py_IsTrue
-                       pylib
+                       (ref-in-space python-vm:representation python-lib)
                        (_fun PyObj* -> _bool)
                        (thunk (error "true?:cannot be extracted"))))
    (false? (get-ffi-obj 'Py_IsFalse
-                        pylib
+                        (ref-in-space python-vm:representation python-lib)
                         (_fun PyObj* -> _bool)
                         (thunk (error "false?:cannot be extracted")))))
   (abstraction))

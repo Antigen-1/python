@@ -7,7 +7,7 @@
    racket/base
    racket/function
    ffi/unsafe
-   '#%foreign
+   (only-in '#%foreign ffi-call)
    (only-in (only-space-in python-vm:representation "init.rkt")
             python-lib))
   (representation

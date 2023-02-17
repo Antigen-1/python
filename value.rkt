@@ -1,6 +1,8 @@
 #lang racket/base
 (require data-abstraction)
 
+(define python-lib (ref-in-space python-vm:representation python-lib))
+
 (define-data
   python-value
   (lib
@@ -11,8 +13,6 @@
    (only-in (only-space-in python-vm:representation "init.rkt")
             python-lib))
   (representation
-   (python-lib (ref-in-space python-vm:representation python-lib))
-   
    (PyObj* (_cpointer/null 'PyObject))
    
    (build-value

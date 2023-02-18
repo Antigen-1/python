@@ -12,4 +12,4 @@
             void
             (thunk (error "fail to build a NONE"))
             (thunk (decrement-reference v))))
-      (decrement-reference (call/new-reference v (lambda (v) (build-value (list PyObj*) "(0)" v))))))))
+      (decrement-reference (call/new-reference v (lambda (v) (build-value (list PyObj*) "0" v))))))))

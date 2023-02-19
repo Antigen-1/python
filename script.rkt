@@ -20,6 +20,6 @@
                                    _int
                                    PyObj*
                                    PyObj*
-                                   -> (r : _PyObj*)
+                                   -> (r : PyObj*)
                                    -> (if r r (error "fail to eval the string"))))))
   (abstraction))

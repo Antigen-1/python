@@ -18,7 +18,7 @@
                              python-lib
                              (_fun _string
                                    _int
-                                   Pyobj*
+                                   PyObj*
                                    PyObj*
                                    -> (r : _PyObj*)
                                    -> (if r r (error "fail to eval the string"))))))

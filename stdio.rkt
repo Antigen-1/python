@@ -3,7 +3,7 @@
 
 (define-data
   file-structure
-  (lib ffi/unsafe)
+  (lib ffi/unsafe racket/function)
   (representation
    (c-runtime (ffi-lib #f))
    (FILE* (_cpointer 'FILE))

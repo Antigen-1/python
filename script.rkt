@@ -3,7 +3,7 @@
 
 (define-data
   python-execution
-  (lib ffi/unsafe (only-in "init.rkt" python-lib) (only-in "value.rkt" PyObj*) (only-in "stdio.rkt" FILE*))
+  (lib ffi/unsafe racket/function (only-in "init.rkt" python-lib) (only-in "value.rkt" PyObj*) (only-in "stdio.rkt" FILE*))
   (representation
    (run-file (get-ffi-obj 'PyRun_File
                           python-lib

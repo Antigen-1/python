@@ -5,7 +5,8 @@
 
 (module* test #f
   (require "../script.rkt"
-           "../init.rkt")
+           "../init.rkt"
+           "../stdio.rkt")
   
   (call-with-python-vm (lambda ()
                          (call-with-file-structure

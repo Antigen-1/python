@@ -21,7 +21,7 @@
                                          (ref-in-space python-vm:representation python-lib)
                                          (_fun PyObj* -> PyObj*)
                                          (thunk (error "create-strong-reference:cannot be extracted"))))
-   (reference:borrowed->strong (get-ffi-obj 'Py_XIncRef
+   (reference:borrowed->strong (get-ffi-obj 'Py_IncRef
                                             (ref-in-space python-vm:representation python-lib)
                                             (_fun (p : PyObj*) -> _void -> p)
                                             (thunk (error "reference:borrowed->strong:cannot be extracted"))))

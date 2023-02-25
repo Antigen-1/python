@@ -1,0 +1,17 @@
+#lang racket/base
+(require data-abstraction)
+
+(define-data
+  python-function
+  (lib ffi/unsafe "value.rkt" "init.rkt")
+  (representation
+   (call-python-function
+    (get-ffi-obj 'PyObject_CallObject
+                 python-lib
+                 (_fun PyObj* PyObj* -> (r : PyObj*) -> (if r r (error "fail to call the function")))
+                 (thunk (error "call-python-function:cannot be extracted"))))
+   (callable? (get-ffi-obj 'PyCallable_Check
+                           python-lib
+                           (_fun PyObj* -> _bool)
+                           (thunk (error "callable?:cannot be extracted")))))
+  (abstraction))

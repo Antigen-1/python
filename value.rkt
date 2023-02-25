@@ -4,7 +4,6 @@
 (define-data
   python-value
   (lib
-   racket/base
    racket/function
    ffi/unsafe
    (only-in '#%foreign ffi-call)

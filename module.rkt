@@ -3,7 +3,7 @@
 
 (define-data
   python-module
-  (lib (only-in "init.rkt" python-lib) (only-in "value.rkt" PyObj*) ffi/unsafe)
+  (lib racket/function (only-in "init.rkt" python-lib) (only-in "value.rkt" PyObj*) ffi/unsafe)
   (representation
    (import (get-ffi-lib 'PyImport_ImportModule
                         python-lib

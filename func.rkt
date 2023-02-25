@@ -3,7 +3,7 @@
 
 (define-data
   python-function
-  (lib ffi/unsafe "value.rkt" "init.rkt")
+  (lib racket/function ffi/unsafe "value.rkt" "init.rkt")
   (representation
    (call-python-function
     (get-ffi-obj 'PyObject_CallObject

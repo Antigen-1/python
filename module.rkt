@@ -3,13 +3,11 @@
 
 (define-data
   python-module
-  (lib racket/function (only-in "init.rkt" python-lib) (only-in "value.rkt" PyObj*) ffi/unsafe)
+  (lib racket/function "init.rkt" "value.rkt" ffi/unsafe "object.rkt")
   (representation
    (import (get-ffi-obj 'PyImport_ImportModule
                         python-lib
                         (_fun _string -> (r : PyObj*) -> (if r r (error "fail to import the module")))
                         (thunk (error "import:cannot be extracted"))))
-   (get-object-by-name (get-ffi-obj 'PyObject_GetAttrString
-                                    python-lib
-                                    (_fun PyObj* _symbol -> (r : PyObj*) -> (if r r (error "fail to retreive the attribute"))))))
+   (get-object-by-name (lambda (mod obj) (check-and-handle-attribute mod obj get-attribute))))
   (abstraction))

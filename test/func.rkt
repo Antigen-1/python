@@ -1,11 +1,11 @@
 #lang racket/base
-(require "../module.rkt" "../func.rkt" "../init.rkt" "../value.rkt" racket/runtime-path)
-
-(define-runtime-path script "func.py")
+(require "../module.rkt" "../func.rkt" "../init.rkt" "../value.rkt" ffi/unsafe)
 
 (call-with-python-vm (lambda ()
-                       (define module (import (path->string (path->complete-path script))))
-                       (define banner (get-object-by-name module 'banner))
+                       (define module (import "builtins"))
+                       (define output (get-object-by-name module 'print))
+                       (define posargs (build-value (list _string) "(s)" "hello, world!"))
+                       (define kwargs (build-value (list _string _string) "{ss}" "end" "\n"))
                        (dynamic-wind void
-                                     (lambda () (if (callable? banner) (decrement-reference (call-python-function banner #f)) (error "cannot be called")))
-                                     (lambda () (map decrement-reference (list module banner))))))
+                                     (lambda () (if (callable? output) (decrement-reference (call-python-function output posargs kwargs)) (error "cannot be called")))
+                                     (lambda () (map decrement-reference (list module output posargs kwargs))))))

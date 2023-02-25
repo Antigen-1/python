@@ -16,12 +16,7 @@
    (set-attribute (get-ffi-obj 'PyObject_SetAttrString
                                python-lib
                                (_fun PyObj* _symbol PyObj* -> (r : _int) -> (if (zero? r) (void) (error "fail to set the attribute")))))
-   (delete-attribute (get-ffi-obj 'PyObject_DelAttrString
-                                  python-lib
-                                  (_fun PyObj* _symbol -> (r : _int)
-                                        -> (if (= r -1)
-                                               (error "fail to delete the attribute")
-                                               (void))))))
+   )
   (abstraction
    (check-and-handle-attribute
     (lambda (obj attr proc) (if (has-attribute? obj attr) (proc obj attr) #f)))))

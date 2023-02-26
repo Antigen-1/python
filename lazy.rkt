@@ -1,5 +1,5 @@
 #lang racket/base
-(require "init.rkt" racket/promise ffi/unsafe (for-syntax racket/base))
+(require "init.rkt" "value.rkt" racket/promise ffi/unsafe (for-syntax racket/base))
 (provide lazy-load)
 
 (define-syntax-rule (lazy-load body (arg ...))

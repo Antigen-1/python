@@ -1,5 +1,5 @@
 #lang racket/base
-(require "../init.rkt" "../module.rkt" ffi/unsafe "../value.rkt" racket/runtime-path racket/date)
+(require "../init.rkt" "../module.rkt" ffi/unsafe "../value.rkt" racket/runtime-path racket/date "../func.rkt")
 
 (define-runtime-path mod-path ".")
 

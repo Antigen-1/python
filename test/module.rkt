@@ -3,7 +3,7 @@
 
 (define-runtime-path mod-path ".")
 
-(putenv "PYTHONPATH" (path->string (path->complete-path mod-path)))
+(set-python-path (path->string (path->complete-path mod-path)))
 
 (call-with-python-vm
  (lambda ()

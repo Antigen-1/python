@@ -9,21 +9,17 @@
 
 (define-data
   python-sequence
-  (lib "init.rkt" "value.rkt" ffi/unsafe racket/function "err.rkt")
+  (lib "init.rkt" "value.rkt" ffi/unsafe racket/function racket/promise "err.rkt" "lazy.rkt")
   (representation
    (python-sequence? (get-ffi-obj 'PySequence_Check
                                   python-lib
                                   (_fun PyObj* -> (r : _int) -> (= r 1))
                                   (thunk (error "python-sequence?:cannot be extracted"))))
-   (seq:add-to-last (get-object-by-name seq-lib 'add_item))
-   (seq:last (get-object-by-name seq-lib 'last))
-   (seq:others (get-object-by-name seq-lib 'others))
-   (nil (get-object-by-name seq-lib 'nil))
-   (nil? (get-ffi-obj 'PySequence_Size
-                      python-lib
-                      (_fun PyObj* -> (r : _ssize)
-                            -> (cond ((= r -1) (check-and-handle-exception print-error))
-                                     (else (zero? r)))))))
+   (seq:add-to-last (lazy-load (get-object-by-name seq-lib 'add_item) (s v)))
+   (seq:last (lazy-load (get-object-by-name seq-lib 'last) (s)))
+   (seq:others (lazy-load (get-object-by-name seq-lib 'others) (s)))
+   (nil (build-value null "[]"))
+   (nil? (compose true? (lazy-load (get-object-by-name seq-lib 'nilp) (s)))))
   (abstraction
    (seq:reverse (lambda (seq) (let loop ((seq seq) (result nil))
                                 (cond ((nil? seq) result)

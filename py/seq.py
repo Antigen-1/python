@@ -12,3 +12,5 @@ def add_item(s v):
 # the nil variable is used only to build new sequences.
 nil = []
 
+def nilp(s):
+    return len(s) == 0

@@ -9,6 +9,5 @@
                         python-lib
                         (_fun (name) :: (PyObj* = (if (string? name) (build-value (list _string) "s" name) name)) -> (r : PyObj*) -> (if r r (check-and-handle-exception print-error)))
                         (thunk (error "import:cannot be extracted"))))
-   (instantiate-class (lambda (mod name . args) (apply call-method mod name (append args (list #f)))))
    (get-object-by-name (lambda (mod obj) (check-and-handle-attribute mod obj get-attribute))))
   (abstraction))

@@ -9,10 +9,6 @@
                                 python-lib
                                 (_fun PyObj* _symbol -> _bool)
                                 (thunk (error "has-attribute?:cannot be extracted"))))
-   (call-method (get-ffi-obj 'PyObject_CallMethodObjArgs
-                             python-lib
-                             (_fun #:varargs-after 2 PyObj* PyObj* PyObj* -> (r : PyObj*) -> (if r r (check-and-handle-exception print-error)))
-                             (thunk (error "call-method:cannot be extracted"))))
    (get-attribute (get-ffi-obj 'PyObject_GetAttrString
                                python-lib
                                (_fun PyObj* _symbol -> (r : PyObj*) -> (if r r (check-and-handle-exception print-error)))

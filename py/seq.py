@@ -8,9 +8,5 @@ def add_item(s v):
     s[len(s)] = v
     return s
 
-# though the python sequence protocol does support several datatypes,
-# the nil variable is used only to build new sequences.
-nil = []
-
 def nilp(s):
     return len(s) == 0

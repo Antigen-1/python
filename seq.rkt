@@ -9,7 +9,7 @@
 
 (define-data
   python-sequence
-  (lib "init.rkt" "value.rkt" ffi/unsafe racket/function)
+  (lib "init.rkt" "value.rkt" ffi/unsafe racket/function "err.rkt")
   (representation
    (python-sequence? (get-ffi-obj 'PySequence_Check
                                   python-lib

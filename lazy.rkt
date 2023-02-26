@@ -4,5 +4,5 @@
 
 (define-syntax-rule (lazy-load body (arg ...))
   (let ((promise (delay body)))
-    (at-exit (function-ptr (lambda () (void (decrement-reference (force promise)))) (_fun -> _void)))
+    (at-exit (lambda () (void (decrement-reference (force promise)))))
     (lambda (arg ...) ((force promise) arg ...))))

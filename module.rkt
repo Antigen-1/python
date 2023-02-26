@@ -3,9 +3,9 @@
 
 (define-data
   python-module
-  (lib racket/function "init.rkt" "value.rkt" ffi/unsafe "object.rkt" "err.rkt")
+  (lib racket/function "init.rkt" "value.rkt" ffi/unsafe "object.rkt" "err.rkt" "env.rkt")
   (representation
-   (set-python-path (curry putenv "PYTHONPATH"))
+   (set-python-path (curry addenv "PYTHONPATH"))
    (import (get-ffi-obj 'PyImport_Import
                         python-lib
                         (_fun (name) :: (PyObj* = (if (string? name) (build-value (list _string) "s" name) name)) -> (r : PyObj*) -> (if r r (check-and-handle-exception print-error)))

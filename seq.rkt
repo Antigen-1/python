@@ -3,11 +3,11 @@
 
 (define-runtime-path mod-path "py")
 
-(set-python-path (path->string (path->complete-path mod-path)))
-
-(define seq-lib (delay (let ((lib (import "seq")))
-                         (at-exit (lambda () (void (decrement-reference lib))))
-                         lib)))
+(define seq-lib (delay
+		  (set-python-path (path->string (path->complete-path mod-path)))
+		  (let ((lib (import "seq")))
+                    (at-exit (lambda () (void (decrement-reference lib))))
+                    lib)))
 
 (define-data
   python-sequence

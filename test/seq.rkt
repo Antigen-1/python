@@ -8,4 +8,5 @@
    (define pr (get-object-by-name bltn 'print))
    (decrement-reference (seq:map (lambda (obj) (call-python-function pr (build-value (list PyObj*) "(N)" obj) #f)) ls))
    (displayln "done")
-   (void (map decrement-reference (list ls pr bltn)))))
+   (void (map decrement-reference (list ls pr bltn)))
+   (displayln "end of test")))

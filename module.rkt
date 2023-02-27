@@ -14,7 +14,7 @@
                       (lazy-load
                        (let* ((sys-lib (import "sys"))
                               (proc (check-and-get (get-object-by-name sys-lib 'path) 'append)))
-                         (decrement-reference sys-lib)
+                         (at-exit (lambda () (void (decrement-reference sys-lib))))
                          proc)
                        (p)))))
   (abstraction))

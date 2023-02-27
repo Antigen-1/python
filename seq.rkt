@@ -1,15 +1,18 @@
 #lang racket/base
-(require data-abstraction racket/runtime-path "value.rkt" "module.rkt")
+(require data-abstraction racket/runtime-path racket/promise "value.rkt" "module.rkt" "init.rkt")
 
 (define-runtime-path mod-path "py")
 
 (set-python-path (path->string (path->complete-path mod-path)))
 
+(define seq-lib (delay (let ((lib (import "seq")))
+                         (at-exit (lambda () (void (decrement-reference lib))))
+                         lib)))
+
 (define-data
   python-sequence
-  (lib "init.rkt" ffi/unsafe racket/function racket/promise "err.rkt" "lazy.rkt")
+  (lib ffi/unsafe racket/function "lazy.rkt")
   (representation
-   (seq-lib (delay (import "seq")))
    (python-sequence? (get-ffi-obj 'PySequence_Check
                                   python-lib
                                   (_fun PyObj* -> (r : _int) -> (= r 1))

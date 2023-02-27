@@ -5,7 +5,7 @@ def others(s):
     return s[:-1]
 
 def add_item(s, v):
-    s[len(s)] = v
+    s.append(v)
     return s
 
 def nilp(s):

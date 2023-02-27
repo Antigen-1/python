@@ -14,5 +14,4 @@
  "module.rkt"
  "func.rkt"
  "err.rkt"
- "seq.rkt"
  )

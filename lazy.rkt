@@ -3,7 +3,7 @@
 (provide lazy-load)
 
 (define build-args (lambda args (let ((l (length args)))
-                                  (build-value (make-list l PyObj*) (format "(~a)" (make-string l #\0))))))
+                                  (apply build-value (make-list l PyObj*) (format "(~a)" (make-string l #\0)) args))))
 
 (define-syntax-rule (lazy-load body (arg ...))
   (let ((promise (delay (let ((proc body))

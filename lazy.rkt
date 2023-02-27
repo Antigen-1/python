@@ -1,5 +1,5 @@
 #lang racket/base
-(require "init.rkt" "value.rkt" "func.rkt" racket/promise (for-syntax racket/base))
+(require "init.rkt" "value.rkt" "func.rkt" racket/promise racket/list (for-syntax racket/base))
 (provide lazy-load)
 
 (define build-args (lambda args (let ((l (length args)))

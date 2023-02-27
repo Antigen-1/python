@@ -16,6 +16,6 @@
                               (path (get-object-by-name sys-lib 'path))
                               (proc (check-and-get path 'append)))
                          (at-exit (lambda () (void (map decrement-reference (list path sys-lib)))))
-                         proc)
+                         (compose proc (curry build-value (list _path) "s")))
                        (p)))))
   (abstraction))

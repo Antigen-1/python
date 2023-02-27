@@ -3,7 +3,7 @@
 
 (define-data
   python-module
-  (lib racket/function "init.rkt" "value.rkt" ffi/unsafe "object.rkt" "err.rkt" "env.rkt" "lazy.rkt")
+  (lib racket/function "init.rkt" "value.rkt" ffi/unsafe "object.rkt" "err.rkt" "lazy.rkt")
   (representation
    (import (get-ffi-obj 'PyImport_Import
                         python-lib

@@ -19,5 +19,6 @@
                           (at-exit (lambda () (void (map decrement-reference (list path sys-lib)))))
                           proc)
                         (p))
-                       (curry build-value (list _path) "s")))))
+                       (curry build-value (list _string/utf-8) "s")
+                       path->string))))
   (abstraction))

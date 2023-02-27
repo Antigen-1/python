@@ -19,7 +19,7 @@
                           (let* ((sys-lib (import "sys"))
                                  (path (get-object-by-name sys-lib 'path))
                                  (proc (check-and-get path 'append)))
-                            (at-exit (lambda () (void (map decrement-reference (list path sys-lib)))))
+                            (at-exit (lambda () (void (map decrement-reference (list sys-lib path)))))
                             proc)
                           (p))
                          )))))

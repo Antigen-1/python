@@ -13,8 +13,9 @@
    (set-python-path (let ((check-and-get (lambda (obj att) (check-and-handle-attribute obj att get-attribute))))
                       (lazy-load
                        (let* ((sys-lib (import "sys"))
-                              (proc (check-and-get (get-object-by-name sys-lib 'path) 'append)))
-                         (at-exit (lambda () (void (decrement-reference sys-lib))))
+                              (path (get-object-by-name sys-lib 'path))
+                              (proc (check-and-get path 'append)))
+                         (at-exit (lambda () (void (map decrement-reference (list path sys-lib)))))
                          proc)
                        (p)))))
   (abstraction))

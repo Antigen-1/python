@@ -9,3 +9,6 @@ def add_item(s, v):
 
 def nilp(s):
     return len(s) == 0
+
+def make_nil():
+    return []

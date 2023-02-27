@@ -20,7 +20,7 @@
    (seq:add-to-last (lazy-load (get-object-by-name (force seq-lib) 'add_item) (s v)))
    (seq:last (lazy-load (get-object-by-name (force seq-lib) 'last) (s)))
    (seq:others (lazy-load (get-object-by-name (force seq-lib) 'others) (s)))
-   (make-nil (thunk (build-value null "[]")))
+   (make-nil (lazy-load (get-object-by-name (force seq-lib) 'make_nil) ()))
    (nil? (compose true? (lazy-load (get-object-by-name (force seq-lib) 'nilp) (s)))))
   (abstraction
    (seq:reverse (lambda (seq) (let loop ((seq seq) (result (make-nil)))

@@ -4,9 +4,8 @@ def last(s):
 def others(s):
     return s[:-1]
 
-def add_item(s v):
-    s[len(s)] = v
-    return s
+def add_item(s, v):
+    return s.append(v)
 
 def nilp(s):
     return len(s) == 0

@@ -17,13 +17,23 @@
    (seq:add-to-last (lazy-load (get-object-by-name (force seq-lib) 'add_item) (s v)))
    (seq:last (lazy-load (get-object-by-name (force seq-lib) 'last) (s)))
    (seq:others (lazy-load (get-object-by-name (force seq-lib) 'others) (s)))
-   (nil (build-value null "[]"))
+   (make-nil (thunk (build-value null "[]")))
    (nil? (compose true? (lazy-load (get-object-by-name (force seq-lib) 'nilp) (s)))))
   (abstraction
-   (seq:reverse (lambda (seq) (let loop ((seq seq) (result nil))
+   (seq:reverse (lambda (seq) (let loop ((seq seq) (result (make-nil)))
                                 (cond ((nil? seq) result)
-                                      (else (loop (seq:others seq) (seq:add-to-last result (seq:last seq))))))))
+                                      (else
+                                       (define others (seq:others seq))
+                                       (define last (seq:last seq))
+                                       (dynamic-wind void
+                                                     (lambda () (loop others (seq:add-to-last result last)))
+                                                     (lambda () (map decrement-reference (list others last result)))))))))
    (seq:map (lambda (proc seq) 
-              (let loop ((seq seq) (result nil))
+              (let loop ((seq seq) (result (make-nil)))
                 (cond ((nil? seq) (seq:reverse result))
-                      (else (loop (seq:others seq) (seq:add-to-last result (proc (seq:last seq)))))))))))
+                      (else
+                       (define others (seq:others seq))
+                       (define last (seq:last seq))
+                       (dynamic-wind void 
+                                     (lambda () (loop others (seq:add-to-last result (proc last))))
+                                     (lambda () (map decrement-reference (list others last result)))))))))))

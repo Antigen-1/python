@@ -36,7 +36,7 @@
                 (cond ((nil? seq) (seq:reverse result))
                       (else
                        (define others (seq:others seq))
-                       (define last (proc (seq:last seq)))
+                       (define last (seq:last seq))
                        (dynamic-wind void 
-                                     (lambda () (loop others (seq:add-to-last result last)))
+                                     (lambda () (loop others (seq:add-to-last result (proc last))))
                                      (lambda () (map decrement-reference (list others last result)))))))))))

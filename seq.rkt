@@ -37,7 +37,7 @@
                       (else
                        (define others (seq:others seq))
                        (define last (seq:last seq))
-		       (define last-result (proc last-result))
+		       (define last-result (proc last))
                        (dynamic-wind void 
                                      (lambda () (loop others (seq:add-to-last result last-result)))
                                      (lambda () (map decrement-reference (list others last last-result result)))))))))))

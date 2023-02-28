@@ -4,4 +4,4 @@
 
 (define current-python-path (make-parameter "libpython3.10"))
 
-(define get-python-lib (lambda () (ffi-lib (current-python-path))))
+(define get-python-lib (lambda () (ffi-lib (current-python-path) #:global? #t)))

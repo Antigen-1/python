@@ -5,9 +5,9 @@
   python-module
   (lib racket/function "init.rkt" "value.rkt" ffi/unsafe "object.rkt" "err.rkt" "lazy.rkt")
   (representation
-   (import (get-ffi-obj 'PyImport_Import
+   (import (get-ffi-obj 'PyImport_ImportModule
                         python-lib
-                        (_fun (name) :: (PyObj* = (if (string? name) (build-value (list _string) "s" name) name)) -> (r : PyObj*) -> (if r r (check-and-handle-exception print-error)))
+                        (_fun _string -> (r : PyObj*) -> (if r r (check-and-handle-exception print-error)))
                         (thunk (error "import:cannot be extracted"))))
    (get-object-by-name (lambda (mod obj) (check-and-handle-attribute mod obj get-attribute)))
    (set-python-path (let ((check-and-get (lambda (obj att) (check-and-handle-attribute obj att get-attribute))))

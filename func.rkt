@@ -9,8 +9,8 @@
     (let ((p (ffi-obj-ref 'PyObject_Call
                           python-lib
                           (thunk (error "call-python-function:cannot be extracted")))))
-      (lambda (#:in (in (list PyObj* PyObj*)) #:out (out PyObj*) proc . args)
-        (cond ((apply (ffi-call p in out) proc args))
+      (lambda (#:in (in (list PyObj* PyObj*)) #:out (out PyObj*) proc args kwargs)
+        (cond (((ffi-call p in out) proc args kwargs))
               (else (check-and-handle-exception print-error))))))
    (callable? (get-ffi-obj 'PyCallable_Check
                            python-lib

@@ -5,10 +5,10 @@
  (lambda ()
    (define mod (import "builtins"))
    (define strlen (get-object-by-name mod 'len))
-   (define result (call-python-function #:in (list _pyunicode)
-                                        #:out _pyssize
+   (define result (call-python-function #:out _pyssize
                                         strlen
-                                        "hello world"))
+                                        (build-value (list _pyunicode) "(N)" "xyzabc")
+                                        #f))
    (display "len:")
    (displayln result)
    (clear unicode-box)

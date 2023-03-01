@@ -7,6 +7,7 @@
    racket/function
    ffi/unsafe
    (only-in '#%foreign ffi-call)
+   "err.rkt"
    "init.rkt")
   (representation
    (PyObj* (_cpointer/null 'PyObject))
@@ -14,6 +15,25 @@
    (build-value
     (let ((func (ffi-obj-ref 'Py_BuildValue python-lib (thunk (error "build-value:cannot be extracted")))))
       (lambda (other-input-types fmt . data) (apply (ffi-call func (cons _string other-input-types) PyObj*) fmt data))))
+
+   (extract-ssize (get-ffi-obj 'PyLong_AsSsize_t
+                               python-lib
+                               (_fun PyObj* -> (r : _ssize) -> (if (and (= r -1) (error-occurred?))
+                                                                   (print-error)
+                                                                   r))
+                               (thunk (error "extract-ssize:cannot be extracted"))))
+   (extract-double (get-ffi-obj 'PyFloat_AsDouble
+                                python-lib
+                                (_fun PyObj* -> (r : _double)
+                                      -> (if (and (= r -1.0) (error-occurred?))
+                                             (print-error)
+                                             r))
+                                (thunk (error "extract-double:cannot be extracted"))))
+   (extract-string/utf-8 (get-ffi-obj 'PyUnicode_AsUTF8
+                                      python-lib
+                                      (_fun PyObj* -> (r : _string)
+                                            -> (if r r (check-and-handle-exception print-error)))
+                                      (thunk (error "extract-string/utf-8:cannot be extracted"))))
 
    (create-strong-reference (get-ffi-obj 'Py_XNewRef
                                          python-lib

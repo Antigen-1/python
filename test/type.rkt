@@ -6,7 +6,7 @@
    (define mod (import "builtins"))
    (define strlen (get-object-by-name mod 'len))
    (define result (call-python-function #:in (list _pyunicode)
-                                        #:out (list _pyssize)
+                                        #:out _pyssize
                                         strlen
                                         "hello world"))
    (display "len:")

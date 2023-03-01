@@ -12,4 +12,4 @@
    (display "len:")
    (displayln result)
    (clear unicode-box)
-   (map decrement-reference (list mod strlen result))))
+   (map decrement-reference (list mod strlen))))

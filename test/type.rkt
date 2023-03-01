@@ -5,7 +5,7 @@
  (lambda ()
    (define mod (import "builtins"))
    (define strlen (get-object-by-name mod 'len))
-   (define result (call-python-function #:in (list _pystring/utf-8)
+   (define result (call-python-function #:in (list _pyunicode)
                                         #:out (list _pyssize)
                                         strlen
                                         "hello world"))

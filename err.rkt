@@ -3,13 +3,12 @@
 
 (define-data
   python-error
-  (lib ffi/unsafe "init.rkt" "value.rkt" racket/function)
+  (lib ffi/unsafe "init.rkt" racket/function)
   (representation
-   ;;borrowed reference
    (error-occurred? (get-ffi-obj 'PyErr_Occurred
                                  python-lib
-                                 ;;return either a NULL or the type of the exception
-                                 (_fun -> PyObj*)
+                                 ;;return either a NULL or the type of the exception (borrowed reference)
+                                 (_fun -> _pointer)
                                  (thunk (error "error-occurred?:cannot be extracted"))))
    (print-error (get-ffi-obj 'PyErr_Print
                              python-lib

@@ -19,7 +19,7 @@
                            (lambda (v)
                              (if v
                                  (let ((s (extract-string/utf-8 v)))
-                                   (decrement-reference v)
+                                   (add unicode-box v)
                                    s)
                                  #f))))
    (_pyssize (make-ctype PyObj*
@@ -29,7 +29,7 @@
                          (lambda (v)
                            (if v
                                (let ((i (extract-ssize v)))
-                                 (decrement-reference v)
+                                 (add ssize-box v)
                                  i)
                                #f))))
    (_pydouble (make-ctype PyObj*
@@ -39,7 +39,7 @@
                           (lambda (v)
                             (if v
                                 (let ((f (extract-double v)))
-                                  (decrement-reference v)
+                                  (add double-box v)
                                   f)
                                 #f)))))
   (abstraction))
@@ -56,7 +56,9 @@
                             (define r (apply build-value types (format "(~a)" (make-string l #\N)) v))
                             (add tuple-box r)
                             r)
-                          (lambda (v) (map (lambda (o t) (cast o PyObj* t)) (map-sequence-to-list values v) types)))))
+                          (lambda (v)
+                            (add tuple-box v)
+                            (map (lambda (o t) (cast o PyObj* t)) (map-sequence-to-list values v) types)))))
    (pytupleof (lambda (type)
                 (make-ctype PyObj*
                             (lambda (v)
@@ -65,6 +67,7 @@
                               (add tuple-box r)
                               r)
                             (lambda (v)
+                              (add tuple-box v)
                               (map-sequence-to-list (lambda (o) (cast o PyObj* type)) v)))))
    (list-box (box null))
    (pylistof (lambda (type)
@@ -75,6 +78,7 @@
                                (add list-box r)
                                r))
                            (lambda (v)
+                             (add list-box v)
                              (map-sequence-to-list (lambda (o) (cast o PyObj* type)) v)))))
    (pylist (lambda types
              (make-ctype PyObj*
@@ -82,7 +86,9 @@
                                        (define r (apply build-value types (format "[~a]" (make-string l #\N)) v))
                                        (add list-box r)
                                        r))
-                         (lambda (v) (map (lambda (o t) (cast o PyObj* t)) (map-sequence-to-list values v) types)))))
+                         (lambda (v)
+                           (add list-box v)
+                           (map (lambda (o t) (cast o PyObj* t)) (map-sequence-to-list values v) types)))))
    (dict-box (box null))
    (pydict (lambda types
              (make-ctype PyObj*
@@ -92,6 +98,7 @@
                            (add dict-box r)
                            r)
                          (lambda (v)
+                           (add dict-box v)
                            (define cast-pair (lambda (o t) (map (lambda (o t) (cast o PyObj* t)) o t)))
                            (map cast-pair (reverse (fold-dict v (lambda (p i) (cons p i)) null)) types)))))
    (pydictof (lambda (key value)
@@ -101,5 +108,7 @@
                              (define r (apply build-value (flatten (make-list l (list key value))) (format "{~a}" (make-string (* 2 l) #\N)) (flatten v)))
                              (add dict-box r)
                              r)
-                           (lambda (v) (reverse (fold-dict v (lambda (p i) (cons (list (cast (car p) PyObj* key) (cast (cadr p) PyObj* value)) i)) null)))))))
+                           (lambda (v)
+                             (add dict-box v)
+                             (reverse (fold-dict v (lambda (p i) (cons (list (cast (car p) PyObj* key) (cast (cadr p) PyObj* value)) i)) null)))))))
   (abstraction))

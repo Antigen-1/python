@@ -16,4 +16,5 @@
    (displayln str)
    (display "len:")
    (displayln result)
-   (clear unicode-box)))
+   (clear unicode-box)
+   (clear ssize-box)))

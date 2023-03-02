@@ -11,13 +11,15 @@
  "init.rkt"
  ;;set the python shared library name here
  "lib.rkt"
- ;;constructor, predicates, and reference operators of python objects
+ ;;all operations I need to use python objects to implement other modules
  "value.rkt"
+ ;;python datatypes in racket ffi
+ "type.rkt"
  ;;operators of python objects' attributes
  "object.rkt"
  ;;python module operators
  "module.rkt"
- ;;operators and predicate of python functions, including methods of python objects
+ ;;caller and predicate of python callables
  "func.rkt"
  ;;python error handling
  "err.rkt"

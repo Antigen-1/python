@@ -1,6 +1,9 @@
 #lang racket/base
 (require data-abstraction)
 
+(define clear (lambda (b) (map decrement-reference (unbox b)) (set-box! b null)))
+(define add (lambda (b v) (set-box! b (cons v (unbox b)))))
+
 (define-data
   python-basic-type
   (lib "value.rkt" ffi/unsafe)
@@ -8,8 +11,6 @@
    (unicode-box (box null))
    (ssize-box (box null))
    (double-box (box null))
-   (clear (lambda (b) (map decrement-reference (unbox b)) (set-box! b null)))
-   (add (lambda (b v) (set-box! b (cons v (unbox b)))))
    (_pyunicode (make-ctype PyObj*
                            (lambda (v) (let ((u (build-value (list _string) "s" v)))
                                          (add unicode-box u)

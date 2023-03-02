@@ -1,19 +1,11 @@
 #lang racket/base
-(require "../init.rkt" "../type.rkt" "../module.rkt" "../value.rkt" "../lazy.rkt")
-
-(define strlen (lazy-load (let* ((mod (import "builtins"))
-                                 (proc (get-object-by-name mod 'len)))
-                            (decrement-reference mod)
-                            proc)
-                          (_pyunicode)
-                          ()
-                          _pyssize))
+(require "../init.rkt" "../type.rkt" "../value.rkt")
 
 (call-with-python-vm
  (lambda ()
-   (define str "xyzabc")
-   (define result (strlen str))
-   (displayln str)
-   (display "len:")
-   (displayln result)
-   (clear unicode-box)))
+   (define m (import "builtins"))
+   (define t (get-object-by-name m 'object))
+   (define dict (cast (check-and-handle-attribute t '__dict__ get-attribute) PyObj* (pydictof (list _pyunicode PyObj*))))
+   (map (compose decrement-reference cadr) dict)
+   (displayln "python `object`'s attributes:")
+   (void (map (compose displayln car) dict))))

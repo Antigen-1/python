@@ -1,5 +1,5 @@
 #lang racket/base
-(require "init.rkt" "func.rkt" "type.rkt" racket/promise (for-syntax racket/base))
+(require "init.rkt" "func.rkt" "type.rkt" "value.rkt" racket/promise (for-syntax racket/base))
 (provide lazy-load)
 
 ;;考虑到python函数对象被封装后不可获得，以下宏会窃取其一个引用计数，请务必保证其引用计数为一

@@ -1,5 +1,5 @@
 #lang racket/base
-(require ffi/unsafe "../module.rkt" "../init.rkt" "../type.rkt" "../value.rkt")
+(require ffi/unsafe "../object.rkt" "../module.rkt" "../init.rkt" "../type.rkt" "../value.rkt")
 
 (call-with-python-vm
  (lambda ()

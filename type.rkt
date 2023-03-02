@@ -41,3 +41,63 @@
                                   f)
                                 #f)))))
   (abstraction))
+
+(define-data
+  python-compound-type
+  (lib "value.rkt" ffi/unsafe racket/list)
+  (representation
+   (tuple-box (box null))
+   (pytuple (lambda types
+              (make-ctype PyObj*
+                          (lambda (v)
+                            (define l (length types))
+                            (define r (apply build-value types (format "(~a)" (make-string l #\N)) v))
+                            (add tuple-box r)
+                            r)
+                          (lambda (v) (map (lambda (o t) (cast o PyObj* t)) (map-sequence-to-list values v) types)))))
+   (pytupleof (lambda (type)
+                (make-ctype PyObj*
+                            (lambda (v)
+                              (define l (length v))
+                              (define r (apply build-value (make-list l type) (format "(~a)" (make-string l #\N)) v))
+                              (add tuple-box r)
+                              r)
+                            (lambda (v)
+                              (map-sequence-to-list (lambda (o) (cast o PyObj* type)) v)))))
+   (list-box (box null))
+   (pylistof (lambda (type)
+               (make-ctype PyObj*
+                           (lambda (v)
+                             (let ((l (length v)))
+                               (define r (apply build-value (make-list l type) (format "[~a]" (make-string l #\N)) v))
+                               (add list-box r)
+                               r))
+                           (lambda (v)
+                             (map-sequence-to-list (lambda (o) (cast o PyObj* type)) v)))))
+   (pylist (lambda types
+             (make-ctype PyObj*
+                         (lambda (v) (let ((l (length types)))
+                                       (define r (apply build-value types (format "[~a]" (make-string l #\N)) v))
+                                       (add list-box r)
+                                       r))
+                         (lambda (v) (map (lambda (o t) (cast o PyObj* t)) (map-sequence-to-list values v) types)))))
+   (dict-box (box null))
+   (pydict (lambda types
+             (make-ctype PyObj*
+                         (lambda (v)
+                           (define l (length v))
+                           (define r (apply build-value (flatten types) (format "{~a}" (make-string (* 2 l) #\N)) (flatten v)))
+                           (add dict-box r)
+                           r)
+                         (lambda (v)
+                           (define cast-pair (lambda (o t) (map (lambda (o t) (cast o PyObj* t)) o t)))
+                           (map cast-pair (reverse (fold-dict v (lambda (p i) (cons p i)) null)) types)))))
+   (pydictof (lambda (key value)
+               (make-ctype PyObj*
+                           (lambda (v)
+                             (define l (length v))
+                             (define r (apply build-value (flatten (make-list l (list key value))) (format "{~a}" (make-string (* 2 l) #\N)) (flatten v)))
+                             (add dict-box r)
+                             r)
+                           (lambda (v) (reverse (fold-dict v (lambda (p i) (cons (list (cast (car p) PyObj* key) (cast (cadr p) PyObj* value)) i)) null)))))))
+  (abstraction))

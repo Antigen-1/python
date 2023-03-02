@@ -35,6 +35,30 @@
                                             -> (if r r (check-and-handle-exception print-error)))
                                       (thunk (error "extract-string/utf-8:cannot be extracted"))))
 
+   (sequence-index (get-ffi-obj 'PySequence_GetItem
+                                python-lib
+                                (_fun PyObj* -> (r : PyObj*) -> (if r r (check-and-handle-exception print-error)))
+                                (thunk (error "sequence-index:cannot be extracted"))))
+   (sequence-length (get-ffi-obj 'PySequence_Size
+                                 python-lib
+                                 (_fun PyObj* -> (r : _ssize)
+                                       -> (if (= r -1) (check-and-handle-exception print-error) r))
+                                 (thunk (error "sequence-length:cannot-be extracted"))))
+   (make-sequence (get-ffi-obj 'PySequence_Repeat
+                               python-lib
+                               (_fun PyObj* _ssize -> (r : PyObj*)
+                                     -> (if r r (check-and-handle-exception print-error)))
+                               (thunk (error "make-sequence:cannot be extracted"))))
+
+   ;;return borrowed reference
+   (fold-dict (get-ffi-obj 'PyDict_Next
+                           python-lib
+                           (_fun (dict proc init (offset 0)) :: (PyObj* = dict) (o : (_ptr io _ssize) = offset) (k : (_ptr o PyObj*)) (v : (_ptr o PyObj*))
+                                 -> (r : _bool)
+                                 -> (if r
+                                        (fold-dict dict proc (proc (list k v) init) o)
+                                        init))))
+
    (create-strong-reference (get-ffi-obj 'Py_XNewRef
                                          python-lib
                                          (_fun PyObj* -> PyObj*)
@@ -66,6 +90,17 @@
                         (thunk (error "false?:cannot be extracted")))))
 
   (abstraction
+   (map-sequence-to-list (lambda (p s)
+                           (let ((l (sequence-length s)))
+                             (let loop ((i 0) (r null))
+                               (cond ((= i l) (reverse r))
+                                     (else
+                                      (define o (sequence-index s i))
+                                      (dynamic-wind
+                                        void
+                                        (lambda () (loop (add1 i) (cons (p o) r)))
+                                        (lambda () (decrement-reference o)))))))))
+   
    ;;这些抽象的目的在于维持输入和输出时对象（在这些caller所有权下）的引用计数不变
    (call/stolen-reference
     (lambda (obj proc)

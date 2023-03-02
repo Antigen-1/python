@@ -1,12 +1,12 @@
 #lang racket/base
-(require data-abstraction)
+(require "value.rkt" data-abstraction)
 
 (define clear (lambda (b) (map decrement-reference (unbox b)) (set-box! b null)))
 (define add (lambda (b v) (set-box! b (cons v (unbox b)))))
 
 (define-data
   python-basic-type
-  (lib "value.rkt" ffi/unsafe)
+  (lib ffi/unsafe)
   (representation
    (unicode-box (box null))
    (ssize-box (box null))
@@ -45,7 +45,7 @@
 
 (define-data
   python-compound-type
-  (lib "value.rkt" ffi/unsafe racket/list)
+  (lib ffi/unsafe racket/list)
   (representation
    (tuple-box (box null))
    (pytuple (lambda types

@@ -6,7 +6,6 @@
    (define m (import "builtins"))
    (define dict (cast (check-and-handle-attribute m '__dict__ get-attribute) PyObj* (pydictof _pyunicode PyObj*)))
    (decrement-reference m)
-   (clear unicode-box)
    (clear dict-box)
    (displayln "python `object`'s attributes:")
    (void (map (compose displayln car) dict))))

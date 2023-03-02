@@ -11,7 +11,11 @@
        #'(let ((promise (delay (let ((p body))
                                  (at-exit (lambda () (decrement-reference p)))
                                  p))))
-           (lambda (args ... kwargs ...) (call-python-function #:in (list (pytuple arg ...) (pydict (list _pyunicode value) ...)) #:out result
-                                                               (force promise)
-                                                               (list args ...)
-                                                               (map list (list key ...) (list kwargs ...)))))))))
+           (lambda (args ... kwargs ...)
+             (dynamic-wind
+               void
+               (lambda () (call-python-function #:in (list (pytuple arg ...) (pydict (list _pyunicode value) ...)) #:out result
+                                                (force promise)
+                                                (list args ...)
+                                                (list (list key kwargs) ...)))
+               (lambda () (clear tuple-box) (clear dict-box)))))))))

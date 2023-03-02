@@ -1,15 +1,19 @@
 #lang racket/base
-(require "../init.rkt" "../module.rkt" "../type.rkt" "../value.rkt" "../func.rkt")
+(require "../init.rkt" "../module.rkt" "../value.rkt" "../lazy.rkt")
+
+(define strlen (lazy-load (let* ((mod (import "builtins"))
+                                 (proc (get-object-by-name mod 'len)))
+                            (decrement-reference mod)
+                            proc)
+                          (_pyunicode)
+                          ()
+                          _pyssize))
 
 (call-with-python-vm
  (lambda ()
-   (define mod (import "builtins"))
-   (define strlen (get-object-by-name mod 'len))
-   (define result (call-python-function #:out _pyssize
-                                        strlen
-                                        (build-value (list _pyunicode) "(N)" "xyzabc")
-                                        #f))
+   (define str "xyzabc")
+   (define result (strlen str))
+   (displayln str)
    (display "len:")
    (displayln result)
-   (clear unicode-box)
-   (map decrement-reference (list mod strlen))))
+   (clear unicode-box)))

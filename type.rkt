@@ -1,5 +1,6 @@
 #lang racket/base
 (require "value.rkt" data-abstraction)
+(provide clear)
 
 (define clear (lambda (b) (map decrement-reference (unbox b)) (set-box! b null)))
 (define add (lambda (b v) (set-box! b (cons v (unbox b)))))

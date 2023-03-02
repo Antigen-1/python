@@ -1,5 +1,5 @@
 #lang racket/base
-(require "../init.rkt" "../module.rkt" "../value.rkt" "../lazy.rkt")
+(require "../init.rkt" "../type.rkt" "../module.rkt" "../value.rkt" "../lazy.rkt")
 
 (define strlen (lazy-load (let* ((mod (import "builtins"))
                                  (proc (get-object-by-name mod 'len)))

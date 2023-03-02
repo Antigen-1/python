@@ -44,11 +44,6 @@
                                  (_fun PyObj* -> (r : _ssize)
                                        -> (if (= r -1) (check-and-handle-exception print-error) r))
                                  (thunk (error "sequence-length:cannot-be extracted"))))
-   (make-sequence (get-ffi-obj 'PySequence_Repeat
-                               python-lib
-                               (_fun PyObj* _ssize -> (r : PyObj*)
-                                     -> (if r r (check-and-handle-exception print-error)))
-                               (thunk (error "make-sequence:cannot be extracted"))))
 
    ;;return borrowed reference
    (fold-dict (get-ffi-obj 'PyDict_Next

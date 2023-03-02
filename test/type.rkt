@@ -1,5 +1,5 @@
 #lang racket/base
-(require "../init.rkt" "../type.rkt" "../value.rkt")
+(require "../module.rkt" "../init.rkt" "../type.rkt" "../value.rkt")
 
 (call-with-python-vm
  (lambda ()

@@ -3,7 +3,7 @@
 
 (define-data
   python-concurrency
-  (lib)
+  (lib "value.rkt")
   (representation
    (cleanup-box (make-thread-cell #f #f))
    (add (lambda (v) (let ((b (thread-cell-ref cleanup-box)))

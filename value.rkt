@@ -16,6 +16,19 @@
     (let ((func (ffi-obj-ref 'Py_BuildValue python-lib (thunk (error "build-value:cannot be extracted")))))
       (lambda (other-input-types fmt . data) (apply (ffi-call func (cons _string other-input-types) PyObj*) fmt data))))
 
+   (create-strong-reference (get-ffi-obj 'Py_XNewRef
+                                         python-lib
+                                         (_fun PyObj* -> PyObj*)
+                                         (thunk (error "create-strong-reference:cannot be extracted"))))
+   (reference:borrowed->strong (get-ffi-obj 'Py_IncRef
+                                            python-lib
+                                            (_fun (p : PyObj*) -> _void -> p)
+                                            (thunk (error "reference:borrowed->strong:cannot be extracted"))))
+   (decrement-reference (get-ffi-obj 'Py_DecRef
+                                     python-lib
+                                     (_fun (p : PyObj*) -> _void -> p)
+                                     (thunk (error "decrement-reference:cannot be extracted"))))
+   
    (extract-ssize (get-ffi-obj 'PyLong_AsSsize_t
                                python-lib
                                (_fun PyObj* -> (r : _ssize) -> (if (and (= r -1) (error-occurred?))
@@ -37,7 +50,7 @@
 
    (sequence-index (get-ffi-obj 'PySequence_GetItem
                                 python-lib
-                                (_fun PyObj* -> (r : PyObj*) -> (if r r (check-and-handle-exception print-error)))
+                                (_fun PyObj* _ssize -> (r : PyObj*) -> (if r r (check-and-handle-exception print-error)))
                                 (thunk (error "sequence-index:cannot be extracted"))))
    (sequence-length (get-ffi-obj 'PySequence_Size
                                  python-lib
@@ -51,21 +64,8 @@
                            (_fun (dict proc init (offset 0)) :: (PyObj* = dict) (o : (_ptr io _ssize) = offset) (k : (_ptr o PyObj*)) (v : (_ptr o PyObj*))
                                  -> (r : _bool)
                                  -> (if r
-                                        (fold-dict dict proc (proc (list k v) init) o)
+                                        (fold-dict dict proc (proc (list (reference:borrowed->strong k) (reference:borrowed->strong v)) init) o)
                                         init))))
-
-   (create-strong-reference (get-ffi-obj 'Py_XNewRef
-                                         python-lib
-                                         (_fun PyObj* -> PyObj*)
-                                         (thunk (error "create-strong-reference:cannot be extracted"))))
-   (reference:borrowed->strong (get-ffi-obj 'Py_IncRef
-                                            python-lib
-                                            (_fun (p : PyObj*) -> _void -> p)
-                                            (thunk (error "reference:borrowed->strong:cannot be extracted"))))
-   (decrement-reference (get-ffi-obj 'Py_DecRef
-                                     python-lib
-                                     (_fun (p : PyObj*) -> _void -> p)
-                                     (thunk (error "decrement-reference:cannot be extracted"))))
    
    (is? (get-ffi-obj 'Py_Is
                      python-lib
@@ -91,10 +91,13 @@
                                (cond ((= i l) (reverse r))
                                      (else
                                       (define o (sequence-index s i))
-                                      (dynamic-wind
-                                        void
-                                        (lambda () (loop (add1 i) (cons (p o) r)))
-                                        (lambda () (decrement-reference o)))))))))
+                                      (loop (add1 i) (cons (p o) r))))))))
+
+   (extract-and-remove (lambda (extract v)
+                         (dynamic-wind
+                           void
+                           (lambda () (extract v))
+                           (lambda () (decrement-reference v)))))
    
    ;;这些抽象的目的在于维持输入和输出时对象（在这些caller所有权下）的引用计数不变
    (call/stolen-reference

@@ -7,22 +7,33 @@
     (provide (all-from-out mod ...))))
 
 (require-and-provide
- ;;the python VM and the corresponding python shared library
+ ;;initialize and finalize the interpreter, and use the corresponding shared library 
  "init.rkt"
- ;;set the python shared library name here
- "lib.rkt"
- ;;all operations I need to use python objects to implement other modules
- "value.rkt"
- ;;python datatypes in racket ffi
+ ;;python-racket type transformers
  "type.rkt"
- ;;operators of python objects' attributes
+ ;;construct racket procedures that execute python code
  "object.rkt"
- ;;python module operators
  "module.rkt"
- ;;caller and predicate of python callables
- "func.rkt"
- ;;python error handling
- "err.rkt"
- ;;load python functions from python module
  "lazy.rkt"
+ ;;error handler
+ "err.rkt"
+ ;;use the python shared library
+ ffi/unsafe
  )
+
+(require #;"thread.rkt" ;;the bindings that ensure the concurrency security are not exported seperately
+         (only-in "lib.rkt" current-python-name) ;;set the shared library's name
+         (except-in "value.rkt"
+                    ;;tools to deal with python values
+                    ;;including the basic type of python objects, reference counting operations, the constructor of simple values, and basic predicates
+                    ;;bindings that should only be used to implement type transformers are not exported
+                    extract-and-remove
+                    extract-ssize
+                    extract-string/utf-8
+                    extract-double
+                    sequence-index
+                    sequence-length
+                    fold-dict
+                    map-sequence-to-list)
+         (except-in "func.rkt" call-python-function))
+(provide (all-from-out "type.rkt" "value.rkt" "func.rkt" "lib.rkt"))

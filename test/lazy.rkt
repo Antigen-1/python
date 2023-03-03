@@ -15,6 +15,4 @@
    (define result (strlen str))
    (displayln str)
    (display "len:")
-   (displayln result)
-   (clear unicode-box)
-   (clear ssize-box)))
+   (displayln result)))

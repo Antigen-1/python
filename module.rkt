@@ -23,6 +23,5 @@
                            (_pyunicode)
                            ()
                            PyObj*))
-                         (path->string path-string))
-                        (clear unicode-box)))))
+                          (path->string path-string))))))
   (abstraction))

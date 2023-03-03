@@ -22,7 +22,7 @@
  )
 
 (require #;"thread.rkt" ;;the bindings that ensure the concurrency security are not exported seperately
-         (only-in "lib.rkt" current-python-name) ;;set the shared library's name
+         (only-in "lib.rkt" current-python-path) ;;set the shared library's name
          (except-in "value.rkt"
                     ;;tools to deal with python values
                     ;;including the basic type of python objects, reference counting operations, the constructor of simple values, and basic predicates

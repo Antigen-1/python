@@ -47,6 +47,11 @@
                                       (_fun PyObj* -> (r : _string)
                                             -> (if r r (check-and-handle-exception print-error)))
                                       (thunk (error "extract-string/utf-8:cannot be extracted"))))
+   (extract-bytes (get-ffi-obj 'PyBytes_AsString
+                               python-lib
+                               (_fun PyObj* -> (r : _bytes)
+                                     -> (if r r (check-and-handle-exception print-error)))
+                               (thunk (error "extract-bytes:cannot be extracted"))))
 
    (sequence-index (get-ffi-obj 'PySequence_GetItem
                                 python-lib
@@ -66,6 +71,11 @@
                                  -> (if r
                                         (fold-dict dict proc (proc (list (reference:borrowed->strong k) (reference:borrowed->strong v)) init) o)
                                         init))))
+
+   (long->bool (get-ffi-obj 'PyBool_FromLong
+                            python-lib
+                            (_fun _long -> PyObj*)
+                            (thunk (error "long->bool:cannot be extracted"))))
    
    (is? (get-ffi-obj 'Py_Is
                      python-lib

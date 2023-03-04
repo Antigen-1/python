@@ -27,7 +27,20 @@
                           (lambda (v)
                             (if v
                                 (extract-and-remove extract-double v)
-                                #f)))))
+                                #f))))
+   (_pybytes (make-ctype PyObj*
+                         (lambda (v) (add (build-value (list _bytes) "y" v)))
+                         (lambda (v) (if v (extract-and-remove extract-bytes v) #f))))
+   (_pybool (make-ctype PyObj*
+                        (lambda (v) (add (long->bool (if (eq? v 'true) 1 0))))
+                        (lambda (v) (if v
+                                        (extract-and-remove
+                                         (lambda (v) (if (true? v) 'true 'false))
+                                         v)
+                                        #f))))
+   (_pyvoid (make-ctype PyObj*
+                        (lambda (v) (error "_pyvoid:cannot be used as racket2c transformer"))
+                        (lambda (v) (if v (extract-and-remove void v) #f)))))
   (abstraction))
 
 (define-data

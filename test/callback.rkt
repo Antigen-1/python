@@ -1,0 +1,20 @@
+#lang racket/base
+(require "../init.rkt" "../module.rkt" "../value.rkt" "../type.rkt" "../lazy.rkt" "../object.rkt" "../func.rkt")
+
+(call-with-python-function
+ (lambda ()
+   (define mymod (create-new-module 'mymod))
+   (define builtins (import "builtins"))
+   (define pprint (lazy-load (get-object-by-name builtins 'print) (PyObj*) (("end" _pyunicode)) _pyvoid))
+   (define callback (lambda (self args kwargs)
+                      (define nm (cast (get-object-by-name self '__name__) PyObj* _pyunicode))
+                      (displayln nm)
+                      (map (lambda (a) (pprint a #:end "\n")) args)
+                      (pprint #:end "\n" (findf (lambda (l) (string=? (car l) "abc")) kwargs))
+                      (void (map decrement-reference `(,self ,@(map cadr kwargs))))
+                      (build-value (list _pointer) "s" #f)))
+   (add-functions mymod (list callback) (list "test"))
+   (define cb (lazy-load (get-object-by-name mymod 'callback) (_pyunicode _pyunicode) (("abc" _pyunicode)) _pyvoid))
+   (cb "hello" "world" #:abc "xyz")
+   (displayln (cast (check-and-handle-attribute cb '__doc__ get-attribute) PyObj* _pyunicode))
+   (void (map decrement-reference (list mymod builtins pprint cb)))))

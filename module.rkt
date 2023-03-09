@@ -1,20 +1,21 @@
 #lang racket/base
 (require data-abstraction ffi/unsafe "init.rkt" "value.rkt" (only-in "type.rkt" pydictof))
 
-(define-cstruct (method-def
-                 (name _string) ;;_symbol does not support NULL pointer
-                 (func (_fun #:keep (lambda (f)
-                                      (define b (box f))
-                                      ;;deallocate the racket procedure when the python interpreter is finalized
-                                      (at-exit (lambda () (set-box! b #f))))
-                             PyObj*
-                             _pointer
-                             _ssize
-                             (pydictof _pyunicode PyObj*)
-                             ->
-                             PyObj*))
-                 (flag _int)
-                 (docs _string)))
+(define-cstruct
+  method-def
+  ((name _string) ;;_symbol does not support NULL pointer
+   (func (_fun #:keep (lambda (f)
+                        (define b (box f))
+                        ;;deallocate the racket procedure when the python interpreter is finalized
+                        (at-exit (lambda () (set-box! b #f))))
+               PyObj*
+               _pointer
+               _ssize
+               (pydictof _pyunicode PyObj*)
+               ->
+               PyObj*))
+   (flag _int)
+   (docs _string)))
 
 (define-data
   python-module

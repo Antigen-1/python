@@ -1,5 +1,5 @@
 #lang racket/base
-(require data-abstraction ffi/unsafe "init.rkt" "value.rkt" (only-in "type.rkt" pydictof))
+(require data-abstraction ffi/unsafe "init.rkt" "value.rkt" (only-in "type.rkt" pydictof _pyunicode))
 
 (define-cstruct
   _method-def

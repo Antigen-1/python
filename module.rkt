@@ -2,7 +2,7 @@
 (require data-abstraction ffi/unsafe "init.rkt" "value.rkt" (only-in "type.rkt" pydictof _pyunicode))
 
 (define-cstruct
-  _method-def
+  _meth-def
   ((name _string) ;;_symbol does not support NULL pointer
    (func (_fun #:keep (lambda (f)
                         (define b (box f))

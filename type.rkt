@@ -23,7 +23,7 @@
                                (extract-and-remove extract-ssize v)
                                #f))))
    (_pydouble (make-ctype PyObj*
-                          (lambda (v) (add (build-value (list _double) "d" v)))
+                          (lambda (v) (add (build-value (list _double*) "d" v)))
                           (lambda (v)
                             (if v
                                 (extract-and-remove extract-double v)

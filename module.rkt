@@ -49,7 +49,7 @@
                         (append (map (lambda (f d) (make-meth-def
                                                     (symbol->string (object-name f))
                                                     (lambda (self block size kwargs)
-                                                      (define l (cblock->list block PyObj* size))
+                                                      (define l (if block (cblock->list block PyObj* size) null))
                                                       (define-values (former latter) (if kwargs (split-at l (- size (length kwargs))) (values l null)))
                                                       (f self former (if kwargs (map list kwargs latter) null)))
                                                     (bitwise-ior (meth-fastcall) (meth-keyword))

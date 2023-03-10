@@ -16,5 +16,4 @@
    (add-functions mymod (list callback) (list "test"))
    (define cb (lazy-load (get-object-by-name mymod 'callback) (_pyunicode _pyunicode) (("abc" _pyunicode)) _pyvoid))
    (cb "hello" "world" #:abc "xyz")
-   (displayln (cast (check-and-handle-attribute cb '__doc__ get-attribute) PyObj* _pyunicode))
    (void (map decrement-reference (list mymod builtins pprint cb)))))

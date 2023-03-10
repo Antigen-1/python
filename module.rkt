@@ -1,5 +1,5 @@
 #lang racket/base
-(require data-abstraction ffi/unsafe "init.rkt" "value.rkt" (only-in "type.rkt" pytupleof _pyunicode))
+(require data-abstraction ffi/unsafe "init.rkt" "value.rkt" (only-in "type.rkt" pytupleof _pyunicode pydictof))
 
 (define-cstruct
   _meth-def
@@ -9,9 +9,8 @@
                         ;;deallocate the racket procedure when the python interpreter is finalized
                         (at-exit (lambda () (set-box! b #f))))
                PyObj*
-               _pointer
-               _ssize
-               (pytupleof _pyunicode)
+               (pytupleof PyObj*)
+               (pydictof _pyunicode PyObj*)
                ->
                PyObj*))
    (flag _int)
@@ -36,7 +35,7 @@
                  (thunk (error "create-new-module:cannot be extracted"))))
 
    ;;mutator
-   (meth-fastcall (make-parameter #x0080))
+   (meth-varargs (make-parameter #x0001))
    (meth-keyword (make-parameter #x0002))
    (add-functions
     (get-ffi-obj 'PyModule_AddFunctions
@@ -48,11 +47,9 @@
                         =
                         (append (map (lambda (f d) (make-meth-def
                                                     (symbol->string (object-name f))
-                                                    (lambda (self block size kwargs)
-                                                      (define l (if block (cblock->list block PyObj* size) null))
-                                                      (define-values (former latter) (if kwargs (split-at l (- size (length kwargs))) (values l null)))
-                                                      (f self former (if kwargs (map list kwargs latter) null)))
-                                                    (bitwise-ior (meth-fastcall) (meth-keyword))
+                                                    (lambda (self args kwargs)
+                                                      (f self args (if kwargs kwargs null)))
+                                                    (bitwise-ior (meth-varargs) (meth-keyword))
                                                     d))
                                      f d)
                                 (list (make-meth-def #f #f 0 #f))))

@@ -11,7 +11,7 @@
                PyObj*
                _pointer
                _ssize
-               (pydictof _pyunicode PyObj*)
+               (pytupleof _pyunicode)
                ->
                PyObj*))
    (flag _int)
@@ -19,7 +19,7 @@
 
 (define-data
   python-module
-  (lib racket/function "type.rkt" "object.rkt" "err.rkt" "lazy.rkt")
+  (lib racket/function "type.rkt" "object.rkt" "err.rkt" "lazy.rkt" racket/list)
   (representation
    ;;accessor
    (import (get-ffi-obj 'PyImport_ImportModule
@@ -49,7 +49,9 @@
                         (append (map (lambda (f d) (make-meth-def
                                                     (symbol->string (object-name f))
                                                     (lambda (self block size kwargs)
-                                                      (f self (cast block _pointer (_list o PyObj* size)) kwargs))
+                                                      (define l (cblock->list block PyObj* size))
+                                                      (define-values (former latter) (split-at l (- size (length kwargs))))
+                                                      (f self former (map list kwargs latter)))
                                                     (bitwise-ior (meth-fastcall) (meth-keyword))
                                                     d))
                                      f d)

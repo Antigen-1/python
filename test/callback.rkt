@@ -1,5 +1,5 @@
 #lang racket/base
-(require "../init.rkt" "../module.rkt" "../value.rkt" "../type.rkt" "../lazy.rkt" "../object.rkt" "../func.rkt")
+(require "../init.rkt" "../module.rkt" "../value.rkt" "../type.rkt" "../lazy.rkt" "../object.rkt" "../func.rkt" ffi/unsafe)
 
 (call-with-python-vm
  (lambda ()

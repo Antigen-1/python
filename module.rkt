@@ -44,7 +44,7 @@
                  (_fun (m f d)
                        ::
                        (PyObj* = m)
-                       ((_array/list _meth-def (add1 (length f)))
+                       ((_list i _meth-def)
                         =
                         (append (map (lambda (f d) (make-meth-def
                                                     (symbol->string (object-name f))

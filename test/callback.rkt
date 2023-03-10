@@ -1,5 +1,4 @@
 #lang racket/base
-(module test racket/base
 (require "../init.rkt" "../module.rkt" "../value.rkt" "../type.rkt" "../lazy.rkt" ffi/unsafe)
 
 (call-with-python-vm
@@ -17,4 +16,3 @@
    (define cb (lazy-load (get-object-by-name mymod 'callback) (_pyunicode _pyunicode) (("abc" _pyunicode)) _pyvoid))
    (cb "hello" "world" #:abc "xyz")
    (void (decrement-reference mymod))))
-)

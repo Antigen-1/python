@@ -9,7 +9,7 @@
                       (define nm (cast (get-object-by-name self '__name__) PyObj* _pyunicode))
                       (displayln nm)
                       (map display-python-unicode args)
-                      (display-python-unicode (cadr (findf (lambda (l) (string=? (car l) "abc")) (map (lambda (l) (list (car l) (cast (cadr l) PyObj* _pyunicode))) kwargs))))
+                      (displayln (cadr (findf (lambda (l) (string=? (car l) "abc")) (map (lambda (l) (list (car l) (cast (cadr l) PyObj* _pyunicode))) kwargs))))
                       (void (decrement-reference self))
                       (build-value (list _pointer) "s" #f)))
    (add-functions mymod (list callback) (list "test"))

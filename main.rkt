@@ -30,10 +30,11 @@
                     extract-and-remove
                     extract-ssize
                     extract-string/utf-8
+                    extract-bytes
                     extract-double
                     sequence-index
                     sequence-length
                     fold-dict
                     map-sequence-to-list)
          (except-in "func.rkt" call-python-function))
-(provide (all-from-out "type.rkt" "value.rkt" "func.rkt" "lib.rkt"))
+(provide (all-from-out "value.rkt" "func.rkt" "lib.rkt"))

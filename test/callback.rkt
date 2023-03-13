@@ -10,7 +10,6 @@
                       (displayln nm)
                       (map display-python-unicode args)
                       (display-python-unicode (cadr (findf (lambda (l) (string=? (car l) "abc")) kwargs)))
-                      (void (decrement-reference self))
                       (build-value (list _pointer) "s" #f)))
    (add-functions mymod (list callback) (list "test"))
    (define cb (lazy-load (get-object-by-name mymod 'callback) (_pyunicode _pyunicode) (("abc" _pyunicode)) _pyvoid))

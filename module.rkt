@@ -1,5 +1,5 @@
 #lang racket/base
-(require data-abstraction ffi/unsafe "init.rkt" "value.rkt" (only-in "type.rkt" pytupleof _pyunicode pydictof))
+(require data-abstraction ffi/unsafe "init.rkt" "value.rkt")
 
 (define-cstruct
   _meth-def
@@ -9,8 +9,8 @@
                         ;;deallocate the racket procedure when the python interpreter is finalized
                         (at-exit (lambda () (set-box! b #f))))
                PyObj*
-               (pytupleof PyObj*)
-               (pydictof _pyunicode PyObj*)
+               PyObj*
+               PyObj*
                ->
                PyObj*))
    (flag _int)
@@ -48,7 +48,20 @@
                         (append (map (lambda (f d) (make-meth-def
                                                     (symbol->string (object-name f))
                                                     (lambda (self args kwargs)
-                                                      (f self args (if kwargs kwargs null)))
+                                                      (define al (map-sequence-to-list values args))
+                                                      (define kl
+                                                        (if kwargs
+                                                            (reverse
+                                                             (fold-dict
+                                                              kwargs
+                                                              (lambda (l i) (cons (list (extract-and-remove extract-string/utf-8 (car l)) (cadr l)) i))
+                                                              null))
+                                                            null))
+                                                      (dynamic-wind
+                                                        void
+                                                        (thunk (f self al kl))
+                                                        (thunk (map decrement-reference al)
+                                                               (map (compose decrement-reference cadr) kl))))
                                                     (bitwise-ior (meth-varargs) (meth-keyword))
                                                     d))
                                      f d)
